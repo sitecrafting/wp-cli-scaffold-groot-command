@@ -12,6 +12,8 @@ namespace GrootScaffold;
 use WP_CLI;
 use Scaffold_Command;
 
+use GrootScaffold\Generator\StylesheetGenerator;
+
 /**
  * Generate starter code for a theme based on Groot
  */
@@ -32,6 +34,12 @@ class GrootScaffoldCommand extends Scaffold_Command {
 	 *
 	 * [--theme_name=<title>]
 	 * : What to put in the 'Theme Name:' header in 'style.css'.
+	 *
+	 * [--theme_uri=<theme_uri>]
+	 * : What to put in the 'Theme URI:' header in 'style.css'.
+	 *
+	 * [--description=<description>]
+	 * : What to put in the 'Description:' header in 'style.css'.
 	 *
 	 * [--author=<full-name>]
 	 * : What to put in the 'Author:' header in 'style.css'.
@@ -54,6 +62,13 @@ class GrootScaffoldCommand extends Scaffold_Command {
 	 */
 	public function groot( $args, $options ) {
     $slug = $args[0];
+
+    $stylesheetGenerator = new StylesheetGenerator(
+      'style.css',
+      $options
+    );
+    $stylesheetGenerator->generate();
+
     WP_CLI::success("TODO generate theme in ABSPATH/wp-content/themes/$slug");
     return;
 	}
