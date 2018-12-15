@@ -14,6 +14,14 @@ namespace GrootScaffold\Generator;
  */
 class StylesheetGenerator extends FileGenerator {
   public function replace_contents($contents) {
+		/*
+		 * Existing, well-known WP settings from the canonical groot repo are
+		 * hard-coded here. See:
+		 *
+		 * https://github.com/sitecrafting/groot/blob/master/less/style.less
+		 */
+
+
     if (!empty($this->options['theme_name'])) {
       $contents = str_replace(
         'Theme Name: Groot',
@@ -32,7 +40,7 @@ class StylesheetGenerator extends FileGenerator {
 
     if (!empty($this->options['description'])) {
       $contents = str_replace(
-         'Description: The official SiteCrafting WordPress starter theme',
+        'Description: The official SiteCrafting WordPress starter theme',
         'Description: ' . $this->options['description'],
         $contents
       );
@@ -54,7 +62,6 @@ class StylesheetGenerator extends FileGenerator {
       );
     }
 
-    echo $contents;
     return $contents;
   }
 }
