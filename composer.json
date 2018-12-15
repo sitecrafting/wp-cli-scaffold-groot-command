@@ -8,16 +8,21 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
-        "files": [ "command.php" ],
         "psr-4": {
             "GrootScaffold\\": "src/GrootScaffold/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "GrootScaffoldTest\\": "test/cases/"
         }
     },
     "require": {
         "wp-cli/wp-cli": "^2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.0"
+        "phpunit/phpunit": "^7.0",
+        "wp-cli/wp-cli": "^2.0"
     },
     "scripts": {
         "test": "vendor/bin/phpunit"

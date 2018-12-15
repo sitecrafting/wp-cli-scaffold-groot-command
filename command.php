@@ -1,6 +1,6 @@
 <?php
 
-if ( ! class_exists( 'WP_CLI' ) ) {
+if ( ! defined( 'WP_CLI' ) && ! WP_CLI ) {
 	return;
 }
 

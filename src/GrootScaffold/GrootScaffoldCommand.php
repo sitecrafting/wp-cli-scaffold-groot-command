@@ -21,6 +21,13 @@ use GrootScaffold\Generator\StylesheetGenerator;
  */
 class GrootScaffoldCommand extends Scaffold_Command {
   /**
+   * Where to go to look for the list of releases
+   *
+   * @var string
+   */
+  const GITHUB_RELEASES_ENDPOINT = 'https://api.github.com/repos/sitecrafting/groot/releases';
+
+  /**
    * See the [Groot website](https://grootthe.me/) for more details.
    *
    * ## OPTIONS
@@ -52,6 +59,13 @@ class GrootScaffoldCommand extends Scaffold_Command {
    * [--force]
    * : Overwrite files that already exist.
    *
+   * [--version=<version>]
+   * : The version of Groot to install. Defaults to the latest, currently v0.1.2
+   * TODO don't hard code this
+   * ---
+   * default: latest
+   * ---
+   *
    * ## EXAMPLES
    *
    *     # Generate a theme with name "Sample Theme" and author "John Doe"
@@ -65,12 +79,16 @@ class GrootScaffoldCommand extends Scaffold_Command {
   public function groot( array $args, array $options ) {
     $slug = $args[0];
 
-    // TODO somehow don't hard-code the version number
-    $zipUrl  = 'https://github.com/sitecrafting/groot/archive/v0.1.1.zip';
-    $zipFile = Utils\get_temp_dir() . 'groot-' . basename($zipUrl);
+    $zipUrl = $this->get_github_release_url( $options['version'] );
+    if (empty($zipUrl)) {
+      WP_CLI::error('Something went wrong finding the latest release!');
+      return false;
+    }
+
+    $zipFile = Utils\get_temp_dir() . 'groot-' . basename($zipUrl) . '.zip';
 
     $downloadResponse = Utils\http_request( 'GET', $zipUrl, [], [
-      'timeout'  => 600, // 10 minutes ought to be enough??
+      'timeout'  => 120,
     ]);
     if ($downloadResponse->status_code === 200) {
       file_put_contents($zipFile, $downloadResponse->body);
@@ -80,10 +98,11 @@ class GrootScaffoldCommand extends Scaffold_Command {
     }
 
     $themeDir = ABSPATH . "wp-content/themes/{$slug}/";
+    mkdir($themeDir);
     Extractor::extract($zipFile, $themeDir);
 
     $lessEntrypointGenerator = new StylesheetGenerator(
-      $themeDir . 'style.less',
+      $themeDir . 'less/style.less',
       $options
     );
     $lessFile = $lessEntrypointGenerator->generate();
@@ -103,6 +122,23 @@ class GrootScaffoldCommand extends Scaffold_Command {
   protected function log_generated_file( string $absolutePath ) {
     $relativePath = str_replace(ABSPATH, '', $absolutePath);
     WP_CLI::log("Generated {$relativePath}");
+  }
+
+  protected function get_github_release_url( string $version ) : string {
+    $releasesResponse = Utils\http_request(
+      'GET',
+      static::GITHUB_RELEASES_ENDPOINT,
+      ['Accept: application/json'],
+      ['timeout' => 120]
+    );
+    if ($releasesResponse->status_code !== 200) {
+      WP_CLI::error("Failed to get Groot releaseversions with status code {$releasesResponse->status_code}");
+      return '';
+    }
+
+    $releases = json_decode($releasesResponse->body, true);
+
+    return $releases[0]['zipball_url'] ?? '';
   }
 
 }
