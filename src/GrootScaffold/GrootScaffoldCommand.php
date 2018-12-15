@@ -116,6 +116,11 @@ class GrootScaffoldCommand extends Scaffold_Command {
     $this->log_generated_file($cssFile);
 
     WP_CLI::success("TODO generate theme in $themeDir");
+
+    if (!empty($options['activate'])) {
+      WP_CLI::runcommand('theme activate ' . basename($themeDir));
+    }
+
     return;
   }
 
