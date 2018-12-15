@@ -38,19 +38,42 @@ class GrootScaffoldTest extends TestCase {
 
     $command = "$wpCliPath scaffold groot wp-scaffold-groot-test"
       . ' --theme_name=Starfruit'
-      . ' --theme_uri=https://grootthe.me'
-      . ' --description="I AM GROOT"'
+      . ' --theme_uri=https://example.com/starfruit'
+      . ' --description="I AM FROOT"'
       . ' --author="Coby Tamayo <ctamayo@sitecrafting.com>"'
-      . ' --author_uri=https://www.sitecrafting.com';
+      . ' --author_uri=https://www.example.com';
 
     echo `$command`;
 
     $this->assertDirectoryExists($this->theme_dir);
-    $this->assertContains(
-      'Description: I AM GROOT',
-      $this->get_theme_file_contents('less/style.less')
-    );
+
+    foreach (['less/style.less', 'style.css'] as $file) {
+      $this->assert_theme_file_contains(
+        $file,
+        'Theme Name: Starfruit'
+      );
+      $this->assert_theme_file_contains(
+        $file,
+        'Theme URI: https://example.com/starfruit'
+      );
+      $this->assert_theme_file_contains(
+        $file,
+        'Description: I AM FROOT'
+      );
+      $this->assert_theme_file_contains(
+        $file,
+        'Author: Coby Tamayo <ctamayo@sitecrafting.com>'
+      );
+      $this->assert_theme_file_contains(
+        $file,
+        'Author URI: https://www.example.com'
+      );
+    }
 	}
+
+  protected function assert_theme_file_contains( string $file, string $needle ) {
+    $this->assertContains($needle, $this->get_theme_file_contents($file));
+  }
 
   protected function get_theme_file_contents( string $file ) : string {
     return file_get_contents(
