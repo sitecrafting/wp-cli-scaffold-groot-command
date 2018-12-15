@@ -79,27 +79,11 @@ class GrootScaffoldCommand extends Scaffold_Command {
   public function groot( array $args, array $options ) {
     $slug = $args[0];
 
-    $zipUrl = $this->get_github_release_url( $options['version'] );
-    if (empty($zipUrl)) {
-      WP_CLI::error('Something went wrong finding the latest release!');
+    $themeDir = $this->download_groot_starter( $slug, $options['version'] );
+    if (empty($themeDir)) {
+      WP_CLI::error('Something went wrong downloading Groot!');
       return false;
     }
-
-    $zipFile = Utils\get_temp_dir() . 'groot-' . basename($zipUrl) . '.zip';
-
-    $downloadResponse = Utils\http_request( 'GET', $zipUrl, [], [
-      'timeout'  => 120,
-    ]);
-    if ($downloadResponse->status_code === 200) {
-      file_put_contents($zipFile, $downloadResponse->body);
-    } else {
-      WP_CLI::error("Download failed with status code {$downloadResponse->status_code}");
-      return false;
-    }
-
-    $themeDir = ABSPATH . "wp-content/themes/{$slug}/";
-    mkdir($themeDir);
-    Extractor::extract($zipFile, $themeDir);
 
     $lessEntrypointGenerator = new StylesheetGenerator(
       $themeDir . 'less/style.less',
@@ -122,6 +106,42 @@ class GrootScaffoldCommand extends Scaffold_Command {
     }
 
     return;
+  }
+
+  /**
+   * Download the theme and place it in a new theme directory called `$slug`
+   *
+   * @param string $slug the new theme slug
+   * @param string $version the version of Groot to download
+   * @return string the absolute directory of the generated theme, or the empty
+   * string on failure.
+   */
+  protected function download_groot_starter(
+    string $slug,
+    string $version
+  ) : string {
+    $zipUrl = $this->get_github_release_url( $version );
+    if (empty($zipUrl)) {
+      return '';
+    }
+
+    $zipFile = Utils\get_temp_dir() . 'groot-' . basename($zipUrl) . '.zip';
+
+    $themeDir = ABSPATH . "wp-content/themes/{$slug}/";
+    mkdir($themeDir);
+    Extractor::extract($zipFile, $themeDir);
+
+    $downloadResponse = Utils\http_request( 'GET', $zipUrl, [], [
+      'timeout'  => 120,
+    ]);
+    if ($downloadResponse->status_code === 200) {
+      file_put_contents($zipFile, $downloadResponse->body);
+    } else {
+      WP_CLI::error("Download failed with status code {$downloadResponse->status_code}");
+      return '';
+    }
+
+    return $themeDir;
   }
 
   protected function log_generated_file( string $absolutePath ) {
