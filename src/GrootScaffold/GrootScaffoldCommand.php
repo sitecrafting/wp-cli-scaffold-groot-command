@@ -106,7 +106,7 @@ class GrootScaffoldCommand extends Scaffold_Command {
     $this->log_generated_file($cssFile);
 
     $libDir = "{$themeDir}lib/{$options['namespace']}/";
-    mkdir($libDir);
+    rename("{$themeDir}/lib/Project", $libDir);
     $this->log_generated_file($libDir);
 
     if (!empty($options['activate'])) {
@@ -141,10 +141,6 @@ class GrootScaffoldCommand extends Scaffold_Command {
 
     $zipFile = Utils\get_temp_dir() . 'groot-' . basename($zipUrl) . '.zip';
 
-    $themeDir = ABSPATH . "wp-content/themes/{$slug}/";
-    mkdir($themeDir);
-    Extractor::extract($zipFile, $themeDir);
-
     $downloadResponse = Utils\http_request( 'GET', $zipUrl, [], [
       'timeout'  => 120,
     ]);
@@ -154,6 +150,10 @@ class GrootScaffoldCommand extends Scaffold_Command {
       WP_CLI::error("Download failed with status code {$downloadResponse->status_code}");
       return '';
     }
+
+    $themeDir = ABSPATH . "wp-content/themes/{$slug}/";
+    mkdir($themeDir);
+    Extractor::extract($zipFile, $themeDir);
 
     return $themeDir;
   }
