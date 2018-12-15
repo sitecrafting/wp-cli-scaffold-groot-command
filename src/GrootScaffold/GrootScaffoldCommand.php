@@ -59,6 +59,9 @@ class GrootScaffoldCommand extends Scaffold_Command {
    * [--company=<company_name>]
    * : What to put in the copyright language. If left blank, copyright is stripped.
    *
+   * [--namespace=<project_namespace>]
+   * : The PHP namespace for your theme's lib classes
+   *
    * [--force]
    * : Overwrite files that already exist.
    *
@@ -102,11 +105,19 @@ class GrootScaffoldCommand extends Scaffold_Command {
     $cssFile = $stylesheetGenerator->generate();
     $this->log_generated_file($cssFile);
 
-    WP_CLI::success("TODO generate theme in $themeDir");
+    $libDir = "{$themeDir}lib/{$options['namespace']}/";
+    mkdir($libDir);
+    $this->log_generated_file($libDir);
 
     if (!empty($options['activate'])) {
       WP_CLI::runcommand('theme activate ' . basename($themeDir));
     }
+
+    WP_CLI::success(sprintf(
+      'Your new theme, %s, is installed at %s',
+      $options['theme_name'],
+      $themeDir
+    ));
 
     return;
   }

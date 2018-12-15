@@ -42,7 +42,8 @@ class GrootScaffoldTest extends TestCase {
       . ' --description="I AM FROOT"'
       . ' --author="Coby Tamayo <ctamayo@sitecrafting.com>"'
       . ' --author_uri=https://www.example.com'
-      . ' --company="EvilCorp, Inc."';
+      . ' --company="EvilCorp, Inc."'
+      . ' --namespace=ClientSite';
 
     echo `$command`;
 
@@ -74,6 +75,8 @@ class GrootScaffoldTest extends TestCase {
         'Copyright ' . date('Y') . ' EvilCorp, Inc.'
       );
     }
+
+    $this->assertDirectoryExists( $this->theme_dir . 'lib/ClientSite' );
 	}
 
   protected function assert_theme_file_contains( string $file, string $needle ) {
