@@ -56,6 +56,9 @@ class GrootScaffoldCommand extends Scaffold_Command {
    * [--author_uri=<uri>]
    * : What to put in the 'Author URI:' header in 'style.css'.
    *
+   * [--company=<company_name>]
+   * : What to put in the copyright language. If left blank, copyright is stripped.
+   *
    * [--force]
    * : Overwrite files that already exist.
    *

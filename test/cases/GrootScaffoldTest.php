@@ -41,7 +41,8 @@ class GrootScaffoldTest extends TestCase {
       . ' --theme_uri=https://example.com/starfruit'
       . ' --description="I AM FROOT"'
       . ' --author="Coby Tamayo <ctamayo@sitecrafting.com>"'
-      . ' --author_uri=https://www.example.com';
+      . ' --author_uri=https://www.example.com'
+      . ' --company="EvilCorp, Inc."';
 
     echo `$command`;
 
@@ -67,6 +68,10 @@ class GrootScaffoldTest extends TestCase {
       $this->assert_theme_file_contains(
         $file,
         'Author URI: https://www.example.com'
+      );
+      $this->assert_theme_file_contains(
+        $file,
+        'Copyright ' . date('Y') . ' EvilCorp, Inc.'
       );
     }
 	}

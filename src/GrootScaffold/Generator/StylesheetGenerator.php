@@ -62,6 +62,21 @@ class StylesheetGenerator extends FileGenerator {
       );
     }
 
+    if (!empty($this->options['company'])) {
+      $copyright = sprintf(
+        'Copyright %d %s',
+        date('Y'),
+        $this->options['company']
+      );
+    } else {
+      $copyright = '';
+    }
+    $contents = preg_replace(
+      '/Copyright 20\d\d SiteCrafting, Inc./',
+      $copyright,
+      $contents
+    );
+
     return $contents;
   }
 }
