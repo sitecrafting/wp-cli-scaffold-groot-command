@@ -21,6 +21,15 @@ use GrootScaffold\Generator\LibraryFileGenerator;
  * Generate starter code for a theme based on Groot
  */
 class GrootScaffoldCommand extends Scaffold_Command {
+  const THEME_FILE_GENERATOR_MAP = [
+    'style.less'    => StylesheetGenerator::class,
+    'style.css'     => StylesheetGenerator::class,
+    'functions.php' => LibraryFileGenerator::class,
+    'BlogPost.php'  => LibraryFileGenerator::class,
+    'Page.php'      => LibraryFileGenerator::class,
+    'FrontPage.php' => LibraryFileGenerator::class,
+  ];
+
   /**
    * Where to go to look for the list of releases
    *
@@ -99,32 +108,18 @@ class GrootScaffoldCommand extends Scaffold_Command {
       return false;
     }
 
-    $lessEntrypointGenerator = new StylesheetGenerator(
-      $themeDir . 'less/style.less',
-      $options
-    );
-    $lessFile = $lessEntrypointGenerator->generate();
-    $this->log_generated_file($lessFile);
+    $this->generate_theme_file($themeDir . 'less/style.less', $options);
+    $this->generate_theme_file($themeDir . 'style.css', $options);
+    $this->generate_theme_file($themeDir . 'functions.php', $options);
 
-    $stylesheetGenerator = new StylesheetGenerator(
-      $themeDir . 'style.css',
-      $options
-    );
-    $cssFile = $stylesheetGenerator->generate();
-    $this->log_generated_file($cssFile);
+    // rename Project namespace directory
+    $libDir = $this->generate_project_namespace_dir($themeDir, $options);
 
-    $fnsFileGenerator = new LibraryFileGenerator(
-      $themeDir . 'functions.php',
-      $options
-    );
-    $fnsFile = $fnsFileGenerator->generate();
-    $this->log_generated_file($fnsFile);
-
-    $libDir = "{$themeDir}lib/{$options['namespace']}/";
-    rename("{$themeDir}/lib/Project", $libDir);
-    $this->log_generated_file($libDir);
-
-    $this->generate_library_files($libDir, $options);
+    // generate library files
+    $libFiles = $this->rglob($libDir . '**/*.php');
+    foreach ($libFiles as $file) {
+      $this->generate_theme_file($file, $options);
+    }
 
     if (!empty($options['activate'])) {
       WP_CLI::runcommand('theme activate ' . basename($themeDir));
@@ -139,16 +134,38 @@ class GrootScaffoldCommand extends Scaffold_Command {
     return;
   }
 
-  protected function generate_library_files(
-    string $libDir,
+  /**
+   * Generate a theme file at the given path
+   */
+  protected function generate_theme_file(
+    string $path,
     array $options
   ) {
-    $libFiles = $this->rglob($libDir . '**/*.php');
-    foreach ($libFiles as $file) {
-      $generator = new LibraryFileGenerator($file, $options);
-      $generated = $generator->generate();
-      $this->log_generated_file($generated);
-    }
+    $class         = static::THEME_FILE_GENERATOR_MAP[basename($path)];
+    $generator     = new $class($path, $options);
+    $generatedFile = $generator->generate();
+
+    $this->log_generated_file($generatedFile);
+  }
+
+  /**
+   * Generate a lib subdir for the given namespace and return its path
+   *
+   * @param string $themeDir
+   * @param array $options
+   * @return string
+   */
+  protected function generate_project_namespace_dir(
+    string $themeDir,
+    array $options
+  ) : string {
+    $libDir = "{$themeDir}lib/{$options['namespace']}/";
+
+    rename("{$themeDir}/lib/Project", $libDir);
+
+    $this->log_generated_file($libDir);
+
+    return $libDir;
   }
 
   /**
