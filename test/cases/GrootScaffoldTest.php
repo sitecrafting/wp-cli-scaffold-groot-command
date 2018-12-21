@@ -14,6 +14,8 @@ use WP_CLI;
 
 /**
  * Test the `wp scaffold groot` command end-to-end
+ *
+ * @group e2e
  */
 class GrootScaffoldTest extends TestCase {
   protected $theme_dir;
@@ -43,7 +45,8 @@ class GrootScaffoldTest extends TestCase {
       . ' --author="Coby Tamayo <ctamayo@sitecrafting.com>"'
       . ' --author_uri=https://www.example.com'
       . ' --company="EvilCorp, Inc."'
-      . ' --namespace=ClientSite';
+      . ' --namespace=ClientSite'
+      . ' --config_callback="// some config code"';
 
     echo `$command`;
 
@@ -77,6 +80,23 @@ class GrootScaffoldTest extends TestCase {
     }
 
     $this->assertDirectoryExists( $this->theme_dir . 'lib/ClientSite' );
+
+    // assert functions.php declares config callback
+    $this->assert_theme_file_contains(
+      'functions.php',
+      "// some config code"
+    );
+
+    foreach (['BlogPost.php', 'Page.php', 'FrontPage.php'] as $libFile) {
+      $this->assertFileExists(
+        $this->theme_dir . 'lib/ClientSite/Post/' . $libFile
+      );
+      // TODO get namespaces working
+      //$this->assert_theme_file_contains(
+      //  'lib/ClientSite/Post/' . $libFile,
+      //  'namespace ClientSite\\Post;'
+      //);
+    }
 	}
 
   protected function assert_theme_file_contains( string $file, string $needle ) {

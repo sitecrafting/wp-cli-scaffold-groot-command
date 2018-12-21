@@ -15,6 +15,7 @@ use WP_CLI\Extractor;
 use WP_CLI\Utils;
 
 use GrootScaffold\Generator\StylesheetGenerator;
+use GrootScaffold\Generator\LibraryFileGenerator;
 
 /**
  * Generate starter code for a theme based on Groot
@@ -72,6 +73,13 @@ class GrootScaffoldCommand extends Scaffold_Command {
    * default: latest
    * ---
    *
+   * [--config_callback=<config_callback>]
+   * : The code to put in the Site config callback
+   * @see https://coniferplug.in/GLOSSARY.html#config-callback
+   * ---
+   * default: ''
+   * ---
+   *
    * ## EXAMPLES
    *
    *     # Generate a theme with name "Sample Theme" and author "John Doe"
@@ -105,21 +113,42 @@ class GrootScaffoldCommand extends Scaffold_Command {
     $cssFile = $stylesheetGenerator->generate();
     $this->log_generated_file($cssFile);
 
+    $fnsFileGenerator = new LibraryFileGenerator(
+      $themeDir . 'functions.php',
+      $options
+    );
+    $fnsFile = $fnsFileGenerator->generate();
+    $this->log_generated_file($fnsFile);
+
     $libDir = "{$themeDir}lib/{$options['namespace']}/";
     rename("{$themeDir}/lib/Project", $libDir);
     $this->log_generated_file($libDir);
+
+    $this->generate_library_files($libDir, $options);
 
     if (!empty($options['activate'])) {
       WP_CLI::runcommand('theme activate ' . basename($themeDir));
     }
 
     WP_CLI::success(sprintf(
-      'Your new theme, %s, is installed at %s',
+      '%s is now installed at %s',
       $options['theme_name'],
       $themeDir
     ));
 
     return;
+  }
+
+  protected function generate_library_files(
+    string $libDir,
+    array $options
+  ) {
+    $libFiles = $this->rglob($libDir . '**/*.php');
+    foreach ($libFiles as $file) {
+      $generator = new LibraryFileGenerator($file, $options);
+      $generated = $generator->generate();
+      $this->log_generated_file($generated);
+    }
   }
 
   /**
@@ -179,5 +208,37 @@ class GrootScaffoldCommand extends Scaffold_Command {
 
     return $releases[0]['zipball_url'] ?? '';
   }
+
+  /**
+   * Recursively look for files, honoring the "/**(slash)" wildcard for
+   * arbitrary directory depth
+   */
+  protected function rglob ($pattern, $flags = 0) {
+    // Keep away the hassles of the rest if we don't use the wildcard anyway
+    if (strpos($pattern, '/**/') === false) {
+        return glob($pattern, $flags);
+    }
+
+    $patternParts = explode('/**/', $pattern);
+
+    // Get sub dirs
+    $upperDir = array_shift($patternParts);
+    $dirs = glob($upperDir . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
+
+    // Get files for current dir
+    $files = glob($pattern, $flags);
+
+    foreach ($dirs as $dir) {
+      // Conjoin subdirectory wildcards back together and recurse within them
+      $subDirContent = $this->rglob(
+        $dir . '/**/' . implode('/**/', $patternParts),
+        $flags
+      );
+
+      $files = array_merge($files, $subDirContent);
+    }
+
+    return $files;
+	}
 
 }
