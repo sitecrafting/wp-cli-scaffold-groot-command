@@ -19,18 +19,22 @@ class LibraryFileGenerator extends FileGenerator {
     $tokens = token_get_all($contents);
     $factory = new TokenHandlerFactory();
 
+    // Get a Generator of parsed token chunks
+    $parsed = (function($tokens) {
+      foreach ($tokens as $token) {
+        yield $token;
+      }
+    })($tokens);
+
     // TODO somehow make factory or loop aware of subsequent tokens, so we can capture namespaces!!
-    $handledTokens = array_reduce($tokens, function(
-      array $handled,
-      $token
-    ) use($factory) {
-      $handler   = $factory->create($token, $this->options);
-      $handled[] = $handler->handle();
+    $iter = new \ArrayIterator($tokens);
+    $handledChunks = [];
+    foreach($parsed as $chunk) {
+      $handler         = $factory->create($chunk, $this->options);
+      $handledChunks[] = $handler->handle();
+    }
 
-      return $handled;
-    }, []);
-
-    return implode('', $handledTokens);
+    return implode('', $handledChunks);
   }
 }
 
