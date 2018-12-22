@@ -73,4 +73,8 @@ class GrootTokenHandler extends AbstractTokenHandler {
     // round down to the nearest even number of spaces
     return floor($spaces / 2) * 2;
   }
+
+  protected function get_value() {
+    return $this->tokens[0][1];
+  }
 }

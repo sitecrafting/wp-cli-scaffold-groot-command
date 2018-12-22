@@ -14,7 +14,15 @@ namespace GrootScaffold\TokenHandler;
  */
 class TransparentTokenHandler extends AbstractTokenHandler {
   public function handle() : string {
-    return $this->get_value();
+    // get just the value for each token
+    $tokenValues = array_map(function($token) {
+      // token is either:
+      // - an array (whose index 1 holds the code string), or
+      // - a string
+      return is_array($token) ? $token[1] : $token;
+    }, $this->tokens);
+
+    return implode('', $tokenValues);
   }
 }
 

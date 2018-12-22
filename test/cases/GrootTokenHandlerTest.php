@@ -21,10 +21,11 @@ use WP_CLI;
 class GrootTokenHandlerTest extends TestCase {
 	public function test_handle_config_callback() {
     $handler = new GrootTokenHandler([
-      // token
-      T_COMMENT,
-      "/*\n   * @groot config_callback\n   */",
-      35,
+      [
+        T_COMMENT,
+        "/*\n   * @groot config_callback\n   */",
+        123,
+      ],
     ], [
       // options
       'config_callback' => "fake_code();\ndo_stuff();"
@@ -44,10 +45,12 @@ class GrootTokenHandlerTest extends TestCase {
 _PHP_;
 
     $handler = new GrootTokenHandler([
-      // token
-      T_COMMENT,
-      $comment,
-      123,
+      [
+        // token
+        T_COMMENT,
+        $comment,
+        123,
+      ],
     ], []);
 
     $this->assertEquals(2, $handler->get_indentation_level());
@@ -55,9 +58,11 @@ _PHP_;
 
   public function test_get_groot_hook_name() {
     $handler = new GrootTokenHandler([
-      T_COMMENT,
-      '/* @groot the_hook */',
-      123,
+      [
+        T_COMMENT,
+        '/* @groot the_hook */',
+        123,
+      ],
     ], []);
 
     $this->assertEquals('the_hook', $handler->get_groot_hook_name());
@@ -65,9 +70,11 @@ _PHP_;
 
   public function test_get_groot_hook_name_no_groot_tag() {
     $handler = new GrootTokenHandler([
-      T_COMMENT,
-      "// blah blah blah", // whoops
-      123,
+      [
+        T_COMMENT,
+        "// blah blah blah", // whoops
+        123,
+      ],
     ], []);
 
     $this->assertEquals('', $handler->get_groot_hook_name());
@@ -75,9 +82,11 @@ _PHP_;
 
   public function test_get_groot_hook_name_empty() {
     $handler = new GrootTokenHandler([
-      T_COMMENT,
-      "// @groot   ", // whoops
-      123,
+      [
+        T_COMMENT,
+        "// @groot   ", // whoops
+        123,
+      ],
     ], []);
 
     $this->assertEquals('', $handler->get_groot_hook_name());

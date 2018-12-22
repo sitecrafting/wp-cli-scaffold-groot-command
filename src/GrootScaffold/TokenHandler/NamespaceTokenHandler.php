@@ -14,7 +14,6 @@ namespace GrootScaffold\TokenHandler;
  */
 class NamespaceTokenHandler extends AbstractTokenHandler {
   public function handle() : string {
-    // TODO
-    return $this->get_value();
+    return "namespace {$this->options['namespace']};";
   }
 }
