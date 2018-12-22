@@ -92,10 +92,10 @@ class GrootScaffoldTest extends TestCase {
         $this->theme_dir . 'lib/ClientSite/Post/' . $libFile
       );
       // TODO get namespaces working
-      //$this->assert_theme_file_contains(
-      //  'lib/ClientSite/Post/' . $libFile,
-      //  'namespace ClientSite\\Post;'
-      //);
+      $this->assert_theme_file_contains(
+        'lib/ClientSite/Post/' . $libFile,
+        'namespace ClientSite\\Post;'
+      );
     }
 	}
 

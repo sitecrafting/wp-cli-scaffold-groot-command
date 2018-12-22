@@ -1,9 +1,5 @@
 <?php
 
-$php = file_get_contents('./test-src.php');
-
-$tokens = token_get_all($php);
-
 define('COMMENT_TOKENS', ['T_COMMENT', 'T_DOC_COMMENT']);
 
 function is_groot_token($token) {
@@ -22,17 +18,15 @@ function generate_hook_code($name, $code) {
       return '/* USE MOAR CLASSEZ */';
     },
     'required_classes' => function($code) {
-      return lines(
+      return lines([
         "'\Some\Class',",
         "'\Some\Other\Class',"
-      );
+      ], get_indentation_level($code));
     },
     'config_callback' => function($code) {
-      $indent = get_indentation_level($code);
+      $indentation = get_indentation_level($code);
 
-      return lines(
-        '// your custom code goes here'
-      );
+      return lines(['// your custom code goes here'], $indentation);
     },
   ];
 
@@ -43,8 +37,9 @@ function generate_hook_code($name, $code) {
   return $generator($code);
 }
 
-function lines(...$lines) {
-  return implode("\n", $lines);
+function lines(array $lines, $indentation = 0) {
+  $indent = str_repeat(' ', $indentation);
+  return implode("\n$indent", $lines);
 }
 
 function get_indentation_level(string $comment) : int {
@@ -85,6 +80,10 @@ function get_groot_hook_components(string $tokenStr) : array {
   $trimmed = array_map('trim', explode(' ', $tokenStr));
   return array_values(array_filter($trimmed));
 }
+
+$php = file_get_contents('./test-src.php');
+
+$tokens = token_get_all($php);
 
 $generated = [];
 while ($token = array_shift($tokens)) {

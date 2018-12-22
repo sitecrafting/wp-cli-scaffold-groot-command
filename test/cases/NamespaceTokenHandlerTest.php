@@ -21,18 +21,18 @@ use WP_CLI;
 class NamespaceTokenHandlerTest extends TestCase {
 	public function test_handle() {
     $handler = new NamespaceTokenHandler([
-      'namespace',
-      'SiteCrafting',
-      '\\',
-      'Project',
-      '\\',
+      [T_NAMESPACE, 'namespace', 123],
+      [T_WHITESPACE, ' ', 123],
+      [T_STRING, 'Project', 123],
+      [T_NS_SEPARATOR, '\\', 123],
+      [T_STRING, 'Subspace', 123],
       ';',
     ], [
       'namespace' => 'SpecialProject',
     ]);
 
     $this->assertEquals(
-      'namespace SpecialProject;',
+      'namespace SpecialProject\\Subspace;',
       $handler->handle()
     );
   }

@@ -25,8 +25,8 @@ if (!$pluginManager->require_classes([
 $site = new Site();
 $site->configure(function() {
 
-  /*
-   * @groot config_callback
-   */
+  /* @groot config_callback */
+
+  // put your custom code here...
 
 });
