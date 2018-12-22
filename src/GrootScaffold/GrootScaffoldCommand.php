@@ -9,8 +9,8 @@
 
 namespace GrootScaffold;
 
-use Scaffold_Command;
 use WP_CLI;
+use WP_CLI_Command;
 use WP_CLI\Extractor;
 use WP_CLI\Utils;
 
@@ -20,7 +20,7 @@ use GrootScaffold\Generator\LibraryFileGenerator;
 /**
  * Generate starter code for a theme based on Groot
  */
-class GrootScaffoldCommand extends Scaffold_Command {
+class GrootScaffoldCommand extends WP_CLI_Command {
   const THEME_FILE_GENERATOR_MAP = [
     'style.less'    => StylesheetGenerator::class,
     'style.css'     => StylesheetGenerator::class,

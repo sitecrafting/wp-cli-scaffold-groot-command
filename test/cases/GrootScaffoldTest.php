@@ -30,13 +30,7 @@ class GrootScaffoldTest extends TestCase {
   }
 
 	public function test_wp_scaffold_groot_command() {
-    if (`which wp`) {
-      $wpCliPath = 'wp';
-    } elseif(getenv('WP_CLI_PATH')) {
-      $wpCliPath = getenv('WP_CLI_PATH');
-    } else {
-      $this->fail('No `wp` detected on your system!');
-    }
+    $wpCliPath = realpath( __DIR__ . '/../../vendor/bin/wp' );
 
     $command = "$wpCliPath scaffold groot wp-scaffold-groot-test"
       . ' --theme_name=Starfruit'
