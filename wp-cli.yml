@@ -1,2 +1,4 @@
 require:
   - command.php
+
+path: wp
