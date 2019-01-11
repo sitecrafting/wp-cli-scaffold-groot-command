@@ -91,9 +91,19 @@ class GrootScaffoldCommand extends WP_CLI_Command {
    *
    * ## EXAMPLES
    *
-   *     # Generate a theme with name "Sample Theme" and author "John Doe"
-   *     $ wp scaffold groot example-theme --theme_name="Example Theme" --author="John Doe"
-   *     Success: Created theme 'Sample Theme'.
+   *     # Generate a theme with name "Example Theme" and author "John Doe"
+   *     $ wp scaffold groot example-theme \
+   *         --theme_name="Example Theme" \
+   *         --author="John Doe"
+   *         --theme_name=Starfruit'
+   *         --theme_uri=https://example.com/starfruit'
+   *         --description="I AM FROOT"'
+   *         --author="Coby Tamayo <ctamayo@sitecrafting.com>"'
+   *         --author_uri=https://www.example.com'
+   *         --company="EvilCorp, Inc."'
+   *         --namespace=ClientSite'
+   *         --config_callback="// some config code"';
+   *     Success: Created theme 'Example Theme'.
    *
    * @subcommand scaffold groot
    *
