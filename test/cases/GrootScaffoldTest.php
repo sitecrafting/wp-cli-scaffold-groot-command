@@ -92,6 +92,27 @@ class GrootScaffoldTest extends TestCase {
     }
 	}
 
+	public function test_wp_scaffold_groot_command_config_callback_file() {
+    $wpCliPath = realpath( __DIR__ . '/../../vendor/bin/wp' );
+
+    $command = "$wpCliPath scaffold groot wp-scaffold-groot-test"
+      . ' --theme_name=Starfruit'
+      . ' --theme_uri=https://example.com/starfruit'
+      . ' --description="I AM FROOT"'
+      . ' --author="Coby Tamayo <ctamayo@sitecrafting.com>"'
+      . ' --author_uri=https://www.example.com'
+      . ' --company="EvilCorp, Inc."'
+      . ' --namespace=ClientSite';
+
+    echo `$command`;
+
+    $this->assert_theme_file_contains(
+      'functions.php',
+      "  // actual contents of the test file config_callback.inc\n"
+        . "  fake_function_call();"
+    );
+  }
+
   protected function assert_theme_file_contains( string $file, string $needle ) {
     $this->assertContains($needle, $this->get_theme_file_contents($file));
   }

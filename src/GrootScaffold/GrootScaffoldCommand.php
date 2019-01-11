@@ -118,6 +118,19 @@ class GrootScaffoldCommand extends WP_CLI_Command {
       return false;
     }
 
+    /*
+     * Unless the --config_callback option is set explicitly,
+     * look for a special file to include in the Conifer
+     * config callback in functions.php
+     * @see https://coniferplug.in/GLOSSARY.html#config-callback
+     */
+    if (
+      empty($options['config_callback'])
+      && file_exists('config_callback.inc')
+    ) {
+      $options['config_callback'] = file_get_contents('./config_callback.inc');
+    }
+
     $this->generate_theme_file($themeDir . 'less/style.less', $options);
     $this->generate_theme_file($themeDir . 'style.css', $options);
     $this->generate_theme_file($themeDir . 'functions.php', $options);
