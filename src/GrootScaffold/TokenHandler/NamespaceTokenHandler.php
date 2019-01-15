@@ -24,10 +24,21 @@ class NamespaceTokenHandler extends AbstractTokenHandler {
         : $token[1];
 
       $value = ($value === static::PLACEHOLDER_NAMESPACE)
-        ? $this->options['namespace']
+        ? $this->get_namespace()
         : $value;
 
       return $code . $value;
     }, '');
+  }
+
+  protected function get_namespace() : string {
+    $namespace = $this->options['namespace'] ?? $this->options['name'];
+
+    // make sure we have a CamelCased namespace with no spaces
+    $namespace = implode('', array_map(function($component) {
+      return ucfirst($component);
+    }, explode(' ', $namespace)));
+
+    return $namespace;
   }
 }
