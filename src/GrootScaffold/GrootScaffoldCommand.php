@@ -203,6 +203,13 @@ class GrootScaffoldCommand extends WP_CLI_Command {
     string $slug,
     string $version
   ) : string {
+    $themeDir = ABSPATH . "wp-content/themes/{$slug}/";
+
+    if (is_dir($themeDir)) {
+      WP_CLI::warning(sprintf('Directory %s exists', $themeDir));
+      return $themeDir;
+    }
+
     $zipUrl = $this->get_github_release_url( $version );
     if (empty($zipUrl)) {
       return '';
@@ -220,7 +227,6 @@ class GrootScaffoldCommand extends WP_CLI_Command {
       return '';
     }
 
-    $themeDir = ABSPATH . "wp-content/themes/{$slug}/";
     mkdir($themeDir);
     Extractor::extract($zipFile, $themeDir);
 
