@@ -90,6 +90,11 @@ class GrootScaffoldTest extends TestCase {
         'namespace ClientSite\\Post;'
       );
     }
+
+    $this->assert_theme_file_contains(
+      'views/front-page.twig',
+      '{% extends \'layouts/main.twig\' %}'
+    );
 	}
 
 	public function test_wp_scaffold_groot_command_config_callback_file() {
