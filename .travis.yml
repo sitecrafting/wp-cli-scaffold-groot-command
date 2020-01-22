@@ -23,4 +23,9 @@ install:
   - composer install
 
 script:
-  - vendor/bin/phpunit
+  - vendor/bin/phpunit --group unit
+  - vendor/bin/phpunit --group e2e
+
+matrix:
+  allow_failures:
+    - php: '7.4'
