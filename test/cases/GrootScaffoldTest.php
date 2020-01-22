@@ -33,6 +33,7 @@ class GrootScaffoldTest extends TestCase {
     $wpCliPath = realpath( __DIR__ . '/../../vendor/bin/wp' );
 
     $command = "$wpCliPath scaffold groot wp-scaffold-groot-test"
+      . ' --quiet'
       . ' --theme_name=Starfruit'
       . ' --theme_uri=https://example.com/starfruit'
       . ' --description="I AM FROOT"'
@@ -101,6 +102,7 @@ class GrootScaffoldTest extends TestCase {
     $wpCliPath = realpath( __DIR__ . '/../../vendor/bin/wp' );
 
     $command = "$wpCliPath scaffold groot wp-scaffold-groot-test"
+      . ' --quiet'
       . ' --theme_name=Starfruit'
       . ' --theme_uri=https://example.com/starfruit'
       . ' --description="I AM FROOT"'
