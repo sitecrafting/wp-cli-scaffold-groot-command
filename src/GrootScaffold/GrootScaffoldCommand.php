@@ -22,12 +22,13 @@ use GrootScaffold\Generator\LibraryFileGenerator;
  */
 class GrootScaffoldCommand extends WP_CLI_Command {
   const THEME_FILE_GENERATOR_MAP = [
-    'style.less'    => StylesheetGenerator::class,
-    'style.css'     => StylesheetGenerator::class,
-    'functions.php' => LibraryFileGenerator::class,
-    'BlogPost.php'  => LibraryFileGenerator::class,
-    'Page.php'      => LibraryFileGenerator::class,
-    'FrontPage.php' => LibraryFileGenerator::class,
+    'style.less'          => StylesheetGenerator::class,
+    'style.css'           => StylesheetGenerator::class,
+    'functions.php'       => LibraryFileGenerator::class,
+    'BlogPost.php'        => LibraryFileGenerator::class,
+    'Page.php'            => LibraryFileGenerator::class,
+    'FrontPage.php'       => LibraryFileGenerator::class,
+    'ThemeTwigHelper.php' => LibraryFileGenerator::class,
   ];
 
   /**

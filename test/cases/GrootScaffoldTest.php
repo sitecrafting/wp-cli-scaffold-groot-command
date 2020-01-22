@@ -92,6 +92,14 @@ class GrootScaffoldTest extends TestCase {
       );
     }
 
+    $this->assertFileExists(
+      $this->theme_dir . 'lib/ClientSite/Twig/ThemeTwigHelper.php'
+    );
+    $this->assert_theme_file_contains(
+      'lib/ClientSite/Twig/ThemeTwigHelper.php',
+      'namespace ClientSite\\Twig;'
+    );
+
     $this->assert_theme_file_contains(
       'views/front-page.twig',
       '{% extends \'layouts/main.twig\' %}'
