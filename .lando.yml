@@ -1,0 +1,22 @@
+name: wp-cli-command-scaffold-groot
+recipe: lamp
+config:
+  webroot: .
+  php: '7.0'
+
+services:
+  appserver:
+    run:
+      - composer install
+
+tooling:
+  test:
+    service: appserver
+    cmd: vendor/bin/phpunit
+  unit:
+    service: appserver
+    cmd: vendor/bin/phpunit --group unit
+  e2e:
+    service: appserver
+    cmd: vendor/bin/phpunit --group e2e
+
