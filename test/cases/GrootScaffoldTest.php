@@ -82,6 +82,12 @@ class GrootScaffoldTest extends TestCase {
       "// some config code"
     );
 
+    // assert functions.php uses the right files
+    $this->assert_theme_file_contains(
+      'functions.php',
+      "use ClientSite\\Twig\\ThemeTwigHelper;"
+    );
+
     foreach (['BlogPost.php', 'Page.php', 'FrontPage.php'] as $libFile) {
       $this->assertFileExists(
         $this->theme_dir . 'lib/ClientSite/Post/' . $libFile
