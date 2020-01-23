@@ -241,7 +241,7 @@ class GrootScaffoldCommand extends WP_CLI_Command {
       ['timeout' => 120]
     );
     if ($releasesResponse->status_code !== 200) {
-      WP_CLI::error("Failed to get Groot releaseversions with status code {$releasesResponse->status_code}");
+      WP_CLI::error("Failed to get Groot release versions with status code {$releasesResponse->status_code}");
       return '';
     }
 
