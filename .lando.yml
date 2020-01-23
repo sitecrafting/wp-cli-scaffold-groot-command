@@ -1,7 +1,7 @@
 name: wp-cli-command-scaffold-groot
-recipe: lamp
+recipe: wordpress
 config:
-  webroot: .
+  webroot: wp
   php: '7.0'
 
 services:

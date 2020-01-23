@@ -26,10 +26,11 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0",
+        "wp-cli/config-command": "~2.0",
         "wp-cli/core-command": "~2.0"
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "post-install-cmd": "if [ ! -d wp ] ; then ./vendor/bin/wp core download --path=wp; fi"
+        "post-install-cmd": "if [ ! -d wp ] ; then ./vendor/bin/wp core download --path=wp; wp config create --skip-check --dbname=wordpress --dbuser=wordpress; fi"
     }
 }
