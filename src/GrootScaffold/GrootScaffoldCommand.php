@@ -77,7 +77,7 @@ class GrootScaffoldCommand extends WP_CLI_Command {
    * : Overwrite files that already exist.
    *
    * [--version=<version>]
-   * : The version of Groot to install. Defaults to the latest, currently v0.1.2
+   * : The version of Groot to install. Defaults to the latest.
    * TODO don't hard code this
    * ---
    * default: latest
