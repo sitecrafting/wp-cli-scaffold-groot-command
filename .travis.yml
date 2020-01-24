@@ -21,6 +21,7 @@ cache:
 
 install:
   - composer install
+  # TODO install WP-CLI
   - wp config create --dbname=wordpress --dbuser=travis --dbpass='' --dbhost=127.0.0.1
   - wp core install --url=http://localhost/ --title='Groot Scaffold' --admin_user=lando --admin_email=lando@example.com
 
