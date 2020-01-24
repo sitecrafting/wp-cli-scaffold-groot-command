@@ -7,8 +7,7 @@ config:
 services:
   appserver:
     run:
-      - composer install
-
+      - bin/dev-setup.sh
 tooling:
   test:
     service: appserver
@@ -19,4 +18,11 @@ tooling:
   e2e:
     service: appserver
     cmd: vendor/bin/phpunit --group e2e
+  setup:
+    service: appserver
+    cmd:
+      - bin/dev-setup.sh
+  clean:
+    service: appserver
+    cmd: rm -rf vendor/ wp/
 
