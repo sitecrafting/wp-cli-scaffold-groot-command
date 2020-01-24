@@ -21,10 +21,8 @@ cache:
 
 install:
   - composer install
-  - curl -o wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-  - chmod +x ./wp
-  - ./wp config create --dbname=wordpress --dbuser=travis --dbpass='' --dbhost=127.0.0.1
-  - ./wp core install --url=http://localhost/ --title='Groot Scaffold' --admin_user=lando --admin_email=lando@example.com
+  - vendor/bin/wp config create --dbname=wordpress --dbuser=travis --dbpass='' --dbhost=127.0.0.1
+  - vendor/bin/wp core install --url=http://localhost/ --title='Groot Scaffold' --admin_user=lando --admin_email=lando@example.com
 
 script:
   - vendor/bin/phpunit --group unit
