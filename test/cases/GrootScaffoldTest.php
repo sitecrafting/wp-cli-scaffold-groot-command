@@ -26,7 +26,7 @@ class GrootScaffoldTest extends TestCase {
   }
 
   public function tearDown() {
-    //`rm -rf {$this->theme_dir}`;
+    `rm -rf {$this->theme_dir}`;
   }
 
 	public function test_wp_scaffold_groot_command() {
