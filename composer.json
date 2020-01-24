@@ -30,7 +30,6 @@
         "wp-cli/core-command": "~2.0"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "post-install-cmd": "if [ ! -d wp ] ; then ./vendor/bin/wp core download --path=wp; wp config create --skip-check --dbname=wordpress --dbuser=wordpress; fi"
+        "test": "vendor/bin/phpunit"
     }
 }
