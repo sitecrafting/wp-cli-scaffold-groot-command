@@ -42,6 +42,11 @@ EOF;
     parent::__construct('', $options);
   }
 
+  public function generate() {
+    mkdir(dirname($this->get_path()), 0755, true);
+    parent::generate();
+  }
+
   public function replace_contents($contents) {
     foreach ($this->get_replacements() as $k => $v) {
       $contents = str_replace($k, $v, $contents);

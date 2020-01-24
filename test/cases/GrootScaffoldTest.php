@@ -137,6 +137,12 @@ class GrootScaffoldTest extends TestCase {
   public function test_wp_scaffold_groot_post_class_command() {
     $this->generate_theme('wp-scaffold-groot-test');
 
+    // test that it creates the directory for us if necessary
+    unlink($this->theme_dir . 'lib/ClientSite/Post/BlogPost.php');
+    unlink($this->theme_dir . 'lib/ClientSite/Post/FrontPage.php');
+    unlink($this->theme_dir . 'lib/ClientSite/Post/Page.php');
+    rmdir($this->theme_dir . 'lib/ClientSite/Post/');
+
     $this->wp('scaffold groot-post-class'
       . ' --quiet'
       . ' --namespace=ClientSite'
