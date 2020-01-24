@@ -16,6 +16,7 @@ use WP_CLI\Utils;
 
 use GrootScaffold\Generator\StylesheetGenerator;
 use GrootScaffold\Generator\LibraryFileGenerator;
+use GrootScaffold\Generator\PostScaffoldFileGenerator;
 
 /**
  * Generate starter code for a theme based on Groot
@@ -158,6 +159,51 @@ class GrootScaffoldCommand extends WP_CLI_Command {
     return;
   }
 
+
+  /**
+   * See the [Groot website](https://grootthe.me/) for more details.
+   *
+   * ## ARGUMENTS
+   *
+   * <post_type>
+   * : The post_type to register.
+   *
+   * ## OPTIONS
+   *
+   * --namespace=<project_namespace>
+   * : The PHP namespace for your theme's lib classes. Required.
+   *
+   * [--post_class=<post_class>]
+   * : Class name to declare for representing your post_type. Defaults to the value of post_type, CamelCased.
+   *
+   * [--force]
+   * : Overwrite files that already exist.
+   *
+   * ## EXAMPLES
+   *
+   *     # Generate a class with name "MyPost" declaring the post_type "my_post"
+   *     $ wp scaffold groot-post-class my_post --namespace=ClientSite
+   *     Success: Created class 'ClientSite\Post\MyPost'.
+   *
+   *     # Generate a class with name "MySpecialPost" declaring the post_type "my_post"
+   *     $ wp scaffold groot-post-class my_post --post_class=MySpecialPost --namespace=ClientSite
+   *     Success: Created class 'ClientSite\Post\MySpecialPost'.
+   *
+   * @subcommand scaffold groot-post-class
+   *
+   * @when after_wp_load
+   */
+  public function groot_post_class(array $args, array $options) {
+    $generator = new PostScaffoldFileGenerator(array_merge($options, [
+      'post_type' => $args[0],
+      'theme_dir' => get_template_directory(),
+    ]));
+
+    $path = $generator->generate();
+
+    return;
+  }
+
   /**
    * Generate a theme file at the given path
    */
@@ -234,6 +280,7 @@ class GrootScaffoldCommand extends WP_CLI_Command {
   }
 
   protected function get_github_release_url( string $version ) : string {
+    return 'https://github.com/sitecrafting/groot/releases/download/v0.4.1/groot-v0.4.1.zip';
     $releasesResponse = Utils\http_request(
       'GET',
       static::GITHUB_RELEASES_ENDPOINT,

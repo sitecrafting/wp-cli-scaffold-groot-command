@@ -12,3 +12,4 @@ if (file_exists($autoload)) {
 }
 
 WP_CLI::add_command( 'scaffold groot', [GrootScaffoldCommand::class, 'groot'] );
+WP_CLI::add_command( 'scaffold groot-post-class', [GrootScaffoldCommand::class, 'groot_post_class'] );

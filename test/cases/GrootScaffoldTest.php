@@ -26,7 +26,7 @@ class GrootScaffoldTest extends TestCase {
   }
 
   public function tearDown() {
-    `rm -rf {$this->theme_dir}`;
+    //`rm -rf {$this->theme_dir}`;
   }
 
 	public function test_wp_scaffold_groot_command() {
@@ -134,6 +134,39 @@ class GrootScaffoldTest extends TestCase {
     );
   }
 
+  public function test_wp_scaffold_groot_post_class_command() {
+    $this->generate_theme('wp-scaffold-groot-test');
+
+    $this->wp('scaffold groot-post-class'
+      . ' --quiet'
+      . ' --namespace=ClientSite'
+      . ' my_post');
+
+    $content = <<<EOF
+<?php
+
+namespace ClientSite\Post;
+
+use Conifer\Post\Post;
+
+class MyPost extends Post {
+  const POST_TYPE = 'my_post';
+
+  public static function type_options() : array {
+    return [
+      'public' => true,
+    ];
+  }
+}
+
+?>
+EOF;
+
+    $this->assertEquals($content, $this->get_theme_file_contents(
+      'lib/ClientSite/Post/MyPost.php'
+    ));
+  }
+
   protected function assert_theme_file_contains( string $file, string $needle ) {
     $this->assertContains($needle, $this->get_theme_file_contents($file));
   }
@@ -142,5 +175,24 @@ class GrootScaffoldTest extends TestCase {
     return file_get_contents(
       ABSPATH . 'wp-content/themes/wp-scaffold-groot-test/' . $file
     );
+  }
+
+  protected function generate_theme( string $theme ) {
+    $this->wp("scaffold groot $theme"
+      . ' --quiet'
+      . ' --activate'
+      . ' --theme_name=Starfruit'
+      . ' --theme_uri=https://example.com/starfruit'
+      . ' --description="I AM FROOT"'
+      . ' --author="Coby Tamayo <ctamayo@sitecrafting.com>"'
+      . ' --author_uri=https://www.example.com'
+      . ' --company="EvilCorp, Inc."'
+      . ' --namespace=ClientSite');
+  }
+
+  protected function wp( string $subCommand ) {
+    $wpCliPath = realpath( __DIR__ . '/../../vendor/bin/wp' );
+
+    `$wpCliPath $subCommand`;
   }
 }
