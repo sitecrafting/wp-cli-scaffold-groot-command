@@ -23,7 +23,11 @@ class FileGenerator {
 
   public function generate() {
     $this->write_contents($this->replace_contents($this->get_contents()));
-		return $this->path;
+		return $this->get_path();
+  }
+
+  public function get_path() : string {
+    return $this->path;
   }
 
   protected function get_contents() : string {
@@ -31,6 +35,6 @@ class FileGenerator {
   }
 
   protected function write_contents($contents) {
-    return file_put_contents($this->path, $contents);
+    return file_put_contents($this->get_path(), $contents);
   }
 }
