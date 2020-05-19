@@ -280,7 +280,6 @@ class GrootScaffoldCommand extends WP_CLI_Command {
   }
 
   protected function get_github_release_url( string $version ) : string {
-    return 'https://github.com/sitecrafting/groot/releases/download/v0.4.1/groot-v0.4.1.zip';
     $releasesResponse = Utils\http_request(
       'GET',
       static::GITHUB_RELEASES_ENDPOINT,
