@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b850e65f2554bf2844499b55ea2eacf6",
+    "content-hash": "3bd24820d9792938d09543458d61becb",
     "packages": [
         {
             "name": "mustache/mustache",
@@ -2154,7 +2154,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">= 7.0"
+        "php": ">= 8.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
